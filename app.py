@@ -2,7 +2,7 @@ import sys, pygame
 pygame.init()
 
 size = width, height = 1280, 940
-speed = [1, 1]
+speed = [3, 3]
 black = 0, 0, 0
 
 screen = pygame.display.set_mode(size)
@@ -11,6 +11,7 @@ ball = pygame.image.load("intro_ball.gif")
 ballrect = ball.get_rect()
 
 while 1:
+    pygame.time.delay(10) # T = 10ms => 100 Hz
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
 
