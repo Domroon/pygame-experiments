@@ -1,27 +1,16 @@
 import pygame
 
-pygame.init()
-
-window = pygame.display.set_mode((500, 500))
+screen = pygame.display.set_mode((500, 500))
 
 x = 50
 y = 50
-width = 40
-height = 60
-vel = 5
+width = 20
+height = 20
 
-pygame.draw.rect(window, (255, 0, 0), (x, y, width, height))
+rectangle = pygame.draw.rect(screen, (255, 0, 0), (x, y, width, height))
+rectangle2 = pygame.draw.rect(screen, (0, 255, 0), (x + 20, y, width, height))
+rectangle2.move((100, 100))
+rectangle2.
 pygame.display.update()
-pygame.time.delay(500)
+pygame.time.delay(5000)
 
-window.fill((0, 0, 0))
-
-pygame.draw.rect(window, (255, 0, 0), (x + 10, y, width, height))
-pygame.display.update()
-pygame.time.delay(500)
-
-window.fill((0, 0, 0))
-
-pygame.draw.rect(window, (255, 0, 0), (x + 30, y, width, height))
-pygame.display.update()
-pygame.time.delay(500)
