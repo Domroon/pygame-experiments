@@ -1,11 +1,12 @@
 import pygame
+import random
 
 pygame.init()
 
-screenWidth = 500
-screenHeight = 500
+screenWidth = 250
+screenHeight = 250
 
-window = pygame.display.set_mode((500, 500))
+window = pygame.display.set_mode((screenWidth, screenHeight))
 
 pygame.display.set_caption("Snake")
 
@@ -32,22 +33,37 @@ def redraw(startRect):
 
 
 def main():
-    startRect = SnakeStartRect(20, 20, 50, 50, (255, 0, 0), 1)
+    # define middle of the rectangle
+    rectWidth = 20
+    rectHeight = 20
+    middleXofRect = (screenWidth-rectWidth)/2
+    middleYofRect = (screenHeight-rectHeight)/2
+
+    # initialize one Rectangle - Object
+    randomStartXvelocity = random.randint(-2, 2)
+    randomStartXvelocity = random.randint(-2, 2)
+    startRect = SnakeStartRect(middleXofRect, middleYofRect, rectWidth, rectHeight, (255, 0, 0), 1)
+
+    # Screen Borders
+    rightScreenBorder = screenWidth - startRect.width
+    leftScreenBorder = 0
+    topScreenBorder = 0
+    bottomScreenBorder = screenHeight - startRect.height
 
     run = True
     while run:
-        clock.tick(250)  # fps = 27
+        clock.tick(100)  # fps = 27
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
         startRect.x += startRect.velocity
-        startRect.y += startRect.velocity
+        # startRect.y += startRect.velocity
 
-        if startRect.x > (screenWidth - startRect.width) or startRect.y > (screenHeight - startRect.height):
+        if startRect.x > rightScreenBorder or startRect.x == leftScreenBorder:
             startRect.velocity *= -1
-        elif startRect.x == 0 or startRect.y == 0:
+        elif startRect.y == topScreenBorder or startRect.y > bottomScreenBorder:
             startRect.velocity *= -1
 
         redraw(startRect)
