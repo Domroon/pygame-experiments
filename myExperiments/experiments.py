@@ -34,10 +34,12 @@ class Rectangle:
         self.y += self.y_velocity
 
 
-def redraw(rectangles, window):
+def redraw(rectangles, test_Rect_1, test_Rect_2, window):
     window.fill((0, 0, 0))
     for rectangle in rectangles:
         rectangle.draw(window)
+    test_Rect_1.draw(window)
+    test_Rect_2.draw(window)
     pygame.display.update()
 
 
@@ -92,6 +94,9 @@ def main():
     topScreenBorder = 0
     bottomScreenBorder = screenHeight - rectHeight
 
+    test_Rect_1 = Rectangle(10, 10, rectWidth, rectHeight, red, 1, 0)
+    test_Rect_2 = Rectangle(1250, 10, rectWidth, rectHeight, red, -1, 0)
+
     run = True
     while run:
         clock.tick(500)  # fps = 27
@@ -117,7 +122,10 @@ def main():
                 rectangle.x_velocity *= -1
                 rectangle.change_color(color_list)
 
-        redraw(rectangles, window)
+        test_Rect_1.move()
+        test_Rect_2.move()
+
+        redraw(rectangles, test_Rect_1, test_Rect_2, window)
 
 
 if __name__ == '__main__':
