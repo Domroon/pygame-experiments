@@ -8,7 +8,7 @@ screenHeight = 720
 
 window = pygame.display.set_mode((screenWidth, screenHeight))
 
-pygame.display.set_caption("Snake")
+pygame.display.set_caption("Rectangles")
 
 clock = pygame.time.Clock()
 
@@ -52,6 +52,26 @@ def redraw(rectangles):
     pygame.display.update()
 
 
+def generate_rectangles(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles, color_list, rectWidth, rectHeight):
+    randomRectXvelocity = random.randint(-1, 1)
+    randomRectYvelocity = random.randint(-1, 1)
+
+    # if the direction velocities would both 0, the rectangle would not move
+    if randomRectXvelocity == 0 and randomRectYvelocity == 0:
+        randomRectXvelocity += 1
+        randomRectYvelocity += 1
+
+    # put the rectangle on a random place on screen
+    randomXcoord = random.randint(leftScreenBorder, rightScreenBorder)
+    randomYcoord = random.randint(topScreenBorder, bottomScreenBorder)
+
+    random_color = color_list[random.randint(0, 3)]
+
+    rectangles.append(Rectangle(randomXcoord, randomYcoord,
+                                rectWidth, rectHeight, random_color, randomRectXvelocity, randomRectYvelocity))
+    pygame.time.delay(100)
+
+
 def main():
     rectangles = []
 
@@ -75,7 +95,6 @@ def main():
     topScreenBorder = 0
     bottomScreenBorder = screenHeight - rectHeight
 
-
     run = True
     while run:
         clock.tick(500)  # fps = 27
@@ -86,23 +105,8 @@ def main():
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            randomRectXvelocity = random.randint(-1, 1)
-            randomRectYvelocity = random.randint(-1, 1)
-
-            # if the direction velocities would both 0, the rectangle would not movr
-            if randomRectXvelocity == 0 and randomRectYvelocity == 0:
-                randomRectXvelocity += 1
-                randomRectYvelocity += 1
-
-            # put the rectangle on a random place on screen
-            randomXcoord = random.randint(leftScreenBorder, rightScreenBorder)
-            randomYcoord = random.randint(topScreenBorder, bottomScreenBorder)
-
-            random_color = color_list[random.randint(0, 3)]
-
-            rectangles.append(Rectangle(randomXcoord, randomYcoord,
-                               rectWidth, rectHeight, random_color, randomRectXvelocity, randomRectYvelocity))
-            pygame.time.delay(100)
+            generate_rectangles(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles,
+                                color_list, rectWidth, rectHeight)
 
         # move the rectangles
         for rectangle in rectangles:
