@@ -55,7 +55,7 @@ def main():
     # initialize one Rectangle - Object
     randomStartXvelocity = random.randint(-1, 1)
     randomStartYvelocity = random.randint(-1, 1)
-    startRect = SnakeStartRect(middleXofRect, middleYofRect+70,
+    startRect = SnakeStartRect(middleXofRect+10, middleYofRect+70,
                                rectWidth, rectHeight, random_color, randomStartXvelocity, randomStartYvelocity)
 
     # Screen Borders
@@ -82,6 +82,7 @@ def main():
             randomRectYvelocity = random.randint(-1, 1)
             rectangles.append(SnakeStartRect(middleXofRect, middleYofRect+70,
                                rectWidth, rectHeight, random_color, randomRectXvelocity, randomRectYvelocity))
+            pygame.time.delay(100)
 
         startRect.x += startRect.x_velocity
         startRect.y += startRect.y_velocity
