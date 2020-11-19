@@ -13,7 +13,7 @@ pygame.display.set_caption("Snake")
 clock = pygame.time.Clock()
 
 
-class SnakeStartRect:
+class Rectangle:
     def __init__(self, x, y, width, height, color, x_velocity, y_velocity):
         self.x = x
         self.y = y
@@ -26,6 +26,20 @@ class SnakeStartRect:
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
 
+    def change_color(self, color_list):
+        current_color = self.color
+        random_number = random.randint(0, 3)
+        random_color = color_list[random_number]
+        if current_color == random_color:
+            if random_number == 3:
+                self.color = color_list[random_number - 1]
+            elif random_number == 0:
+                self.color = color_list[random_number + 1]
+            else:
+                self.color = color_list[random_number + 1]
+        else:
+            self.color = color_list[random_number]
+
 
 def redraw(rectangles):
     window.fill((0, 0, 0))
@@ -33,6 +47,7 @@ def redraw(rectangles):
     for rectangle in rectangles:
         rectangle.draw(window)
     pygame.display.update()
+
 
 def main():
     rectangles = []
@@ -49,24 +64,14 @@ def main():
     blue = (0, 0, 255)
     yellow = (255, 255, 0)
     color_list = [red, green, blue, yellow]
-    random_color = color_list[random.randint(1, 3)]
     color_counter = 0
 
-    # initialize one Rectangle - Object
-    randomStartXvelocity = random.randint(-1, 1)
-    randomStartYvelocity = random.randint(-1, 1)
-    startRect = SnakeStartRect(middleXofRect+10, middleYofRect+70,
-                               rectWidth, rectHeight, random_color, randomStartXvelocity, randomStartYvelocity)
-
     # Screen Borders
-    rightScreenBorder = screenWidth - startRect.width
+    rightScreenBorder = screenWidth - rectWidth
     leftScreenBorder = 0
     topScreenBorder = 0
-    bottomScreenBorder = screenHeight - startRect.height
+    bottomScreenBorder = screenHeight - rectHeight
 
-    # Directions
-    x_directions = [-1, 0, 1]
-    y_directions = [-1, 0, 1]
 
     run = True
     while run:
@@ -80,23 +85,29 @@ def main():
         if keys[pygame.K_SPACE]:
             randomRectXvelocity = random.randint(-1, 1)
             randomRectYvelocity = random.randint(-1, 1)
-            random_color = color_list[random.randint(1, 3)]
+
+            # if the direction velocities would both 0, the rectangle would not movr
             if randomRectXvelocity == 0 and randomRectYvelocity == 0:
                 randomRectXvelocity += 1
                 randomRectYvelocity += 1
+
+            # put the rectangle on a random place on screen
             randomXcoord = random.randint(leftScreenBorder, rightScreenBorder)
             randomYcoord = random.randint(topScreenBorder, bottomScreenBorder)
-            rectangles.append(SnakeStartRect(randomXcoord, randomYcoord,
+
+            random_color = color_list[random.randint(0, 3)]
+
+            rectangles.append(Rectangle(randomXcoord, randomYcoord,
                                rectWidth, rectHeight, random_color, randomRectXvelocity, randomRectYvelocity))
             pygame.time.delay(100)
 
-        # startRect.x += startRect.x_velocity
-        # startRect.y += startRect.y_velocity
-
-        # calculations for other rectangles
+        # move the rectangles
         for rectangle in rectangles:
             rectangle.x += rectangle.x_velocity
             rectangle.y += rectangle.y_velocity
+
+        # check for border collision and change color and direction
+        for rectangle in rectangles:
             if rectangle.y == topScreenBorder:
                 rectangle.y_velocity *= -1
             if rectangle.x == rightScreenBorder:
@@ -107,10 +118,7 @@ def main():
                 rectangle.x_velocity *= -1
             if rectangle.y == topScreenBorder or rectangle.y == bottomScreenBorder or rectangle.x == rightScreenBorder\
                     or rectangle.x == leftScreenBorder:
-                rectangle.color = color_list[color_counter]
-                color_counter += 1
-                if color_counter == 4:
-                    color_counter = 0
+                rectangle.change_color(color_list)
 
         redraw(rectangles)
 
