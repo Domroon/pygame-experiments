@@ -27,24 +27,36 @@ class SnakeStartRect:
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
 
 
-def redraw(startRect):
+def redraw(startRect, rectangles):
     window.fill((0, 0, 0))
     startRect.draw(window)
+    for rectangle in rectangles:
+        rectangle.draw(window)
     pygame.display.update()
 
-
 def main():
+    rectangles = []
+
     # define middle of the rectangle
-    rectWidth = 10
-    rectHeight = 10
+    rectWidth = 40
+    rectHeight = 40
     middleXofRect = (screenWidth-rectWidth)/2
     middleYofRect = (screenHeight-rectHeight)/2
+
+    # Rectangle Colors
+    red = (255, 0, 0)
+    green = (0, 255, 0)
+    blue = (0, 0, 255)
+    yellow = (255, 255, 0)
+    color_list = [red, green, blue, yellow]
+    random_color = color_list[random.randint(1, 3)]
+    color_counter = 0
 
     # initialize one Rectangle - Object
     randomStartXvelocity = random.randint(-1, 1)
     randomStartYvelocity = random.randint(-1, 1)
     startRect = SnakeStartRect(middleXofRect, middleYofRect+70,
-                               rectWidth, rectHeight, (255, 0, 0), randomStartXvelocity, randomStartYvelocity)
+                               rectWidth, rectHeight, random_color, randomStartXvelocity, randomStartYvelocity)
 
     # Screen Borders
     rightScreenBorder = screenWidth - startRect.width
@@ -52,7 +64,7 @@ def main():
     topScreenBorder = 0
     bottomScreenBorder = screenHeight - startRect.height
 
-    #x - Directions
+    # Directions
     x_directions = [-1, 0, 1]
     y_directions = [-1, 0, 1]
 
@@ -64,19 +76,49 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            randomRectXvelocity = random.randint(-1, 1)
+            randomRectYvelocity = random.randint(-1, 1)
+            rectangles.append(SnakeStartRect(middleXofRect, middleYofRect,
+                               rectWidth, rectHeight, random_color, randomRectXvelocity, randomRectYvelocity))
+
         startRect.x += startRect.x_velocity
         startRect.y += startRect.y_velocity
+        for rectangle in rectangles:
+            rectangle.x += rectangle.x_velocity
+            rectangle.y += rectangle.y_velocity
 
         if startRect.y == topScreenBorder:
             startRect.y_velocity *= -1
+            startRect.color = color_list[color_counter]
+            color_counter += 1
+            if color_counter == 4:
+                color_counter = 0
+
         if startRect.x == rightScreenBorder:
             startRect.x_velocity *= -1
+            startRect.color = color_list[color_counter]
+            color_counter += 1
+            if color_counter == 4:
+                color_counter = 0
+
         if startRect.y == bottomScreenBorder:
             startRect.y_velocity *= -1
+            startRect.color = color_list[color_counter]
+            color_counter += 1
+            if color_counter == 4:
+                color_counter = 0
+
         if startRect.x == leftScreenBorder:
             startRect.x_velocity *= -1
+            startRect.color = color_list[color_counter]
+            color_counter += 1
+            if color_counter == 4:
+                color_counter = 0
 
-        redraw(startRect)
+
+        redraw(startRect, rectangles)
 
 
 if __name__ == '__main__':
