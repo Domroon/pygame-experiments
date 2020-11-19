@@ -29,7 +29,7 @@ class SnakeStartRect:
 
 def redraw(startRect, rectangles):
     window.fill((0, 0, 0))
-    startRect.draw(window)
+    # startRect.draw(window)
     for rectangle in rectangles:
         rectangle.draw(window)
     pygame.display.update()
@@ -80,55 +80,40 @@ def main():
         if keys[pygame.K_SPACE]:
             randomRectXvelocity = random.randint(-1, 1)
             randomRectYvelocity = random.randint(-1, 1)
-            rectangles.append(SnakeStartRect(middleXofRect, middleYofRect+70,
+            if randomRectXvelocity == 0 and randomRectYvelocity == 0:
+                randomRectXvelocity += 1
+                randomRectYvelocity += 1
+            randomXcoord = random.randint(leftScreenBorder, rightScreenBorder)
+            randomYcoord = random.randint(topScreenBorder, bottomScreenBorder)
+            rectangles.append(SnakeStartRect(randomXcoord, randomYcoord,
                                rectWidth, rectHeight, random_color, randomRectXvelocity, randomRectYvelocity))
             pygame.time.delay(100)
 
-        startRect.x += startRect.x_velocity
-        startRect.y += startRect.y_velocity
+        # startRect.x += startRect.x_velocity
+        # startRect.y += startRect.y_velocity
 
+        hit_wall = False
         # calculations for other rectangles
         for rectangle in rectangles:
             rectangle.x += rectangle.x_velocity
             rectangle.y += rectangle.y_velocity
             if rectangle.y == topScreenBorder:
                 rectangle.y_velocity *= -1
-            if rectangle.x == rightScreenBorder:
+                hit_wall = True
+            elif rectangle.x == rightScreenBorder:
                 rectangle.x_velocity *= -1
-            if rectangle.y == bottomScreenBorder:
+                hit_wall = True
+            elif rectangle.y == bottomScreenBorder:
                 rectangle.y_velocity *= -1
-            if rectangle.x == leftScreenBorder:
+                hit_wall = True
+            elif rectangle.x == leftScreenBorder:
                 rectangle.x_velocity *= -1
-
-        if startRect.y == topScreenBorder:
-            startRect.y_velocity *= -1
-            startRect.color = color_list[color_counter]
-            color_counter += 1
-            if color_counter == 4:
-                color_counter = 0
-
-        if startRect.x == rightScreenBorder:
-            startRect.x_velocity *= -1
-            startRect.color = color_list[color_counter]
-            color_counter += 1
-            if color_counter == 4:
-                color_counter = 0
-
-        if startRect.y == bottomScreenBorder:
-            startRect.y_velocity *= -1
-            startRect.color = color_list[color_counter]
-            color_counter += 1
-            if color_counter == 4:
-                color_counter = 0
-
-        if startRect.x == leftScreenBorder:
-            startRect.x_velocity *= -1
-            startRect.color = color_list[color_counter]
-            color_counter += 1
-            if color_counter == 4:
-                color_counter = 0
-
-
+                hit_wall = True
+            if hit_wall:
+                rectangle.color = color_list[color_counter]
+                color_counter += 1
+                if color_counter == 4:
+                    color_counter = 0
 
         redraw(startRect, rectangles)
 
