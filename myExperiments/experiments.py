@@ -1,17 +1,6 @@
 import pygame
 import random
 
-pygame.init()
-
-screenWidth = 1280
-screenHeight = 720
-
-window = pygame.display.set_mode((screenWidth, screenHeight))
-
-pygame.display.set_caption("Rectangles")
-
-clock = pygame.time.Clock()
-
 
 class Rectangle:
     def __init__(self, x, y, width, height, color, x_velocity, y_velocity):
@@ -45,14 +34,14 @@ class Rectangle:
         self.y += self.y_velocity
 
 
-def redraw(rectangles):
+def redraw(rectangles, window):
     window.fill((0, 0, 0))
     for rectangle in rectangles:
         rectangle.draw(window)
     pygame.display.update()
 
 
-def generate_rectangles(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles, color_list, rectWidth, rectHeight):
+def generate_rectangle(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles, color_list, rectWidth, rectHeight):
     randomRectXvelocity = random.randint(-1, 1)
     randomRectYvelocity = random.randint(-1, 1)
 
@@ -73,13 +62,21 @@ def generate_rectangles(leftScreenBorder, rightScreenBorder, topScreenBorder, bo
 
 
 def main():
-    rectangles = []
+    pygame.init()
 
-    # define middle of the rectangle
+    screenWidth = 1280
+    screenHeight = 720
+
+    window = pygame.display.set_mode((screenWidth, screenHeight))
+    pygame.display.set_caption("Rectangles")
+
+    clock = pygame.time.Clock()
+
+    rectangles = []  # list to store all rectangles for the screen
+
+    # define the dimensions of a rectangle
     rectWidth = 20
     rectHeight = 20
-    middleXofRect = (screenWidth-rectWidth)/2
-    middleYofRect = (screenHeight-rectHeight)/2
 
     # Rectangle Colors
     red = (255, 0, 0)
@@ -105,28 +102,22 @@ def main():
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            generate_rectangles(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles,
+            generate_rectangle(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles,
                                 color_list, rectWidth, rectHeight)
 
-        # move the rectangles
         for rectangle in rectangles:
-            rectangle.move()
 
-        # check for border collision and change color and direction
-        for rectangle in rectangles:
-            if rectangle.y == topScreenBorder:
+            rectangle.move()  # move the rectangles
+
+            # check for border collision and change color and direction
+            if rectangle.y == topScreenBorder or rectangle.y == bottomScreenBorder:
                 rectangle.y_velocity *= -1
-            if rectangle.x == rightScreenBorder:
+                rectangle.change_color(color_list)
+            if rectangle.x == rightScreenBorder or rectangle.x == leftScreenBorder:
                 rectangle.x_velocity *= -1
-            if rectangle.y == bottomScreenBorder:
-                rectangle.y_velocity *= -1
-            if rectangle.x == leftScreenBorder:
-                rectangle.x_velocity *= -1
-            if rectangle.y == topScreenBorder or rectangle.y == bottomScreenBorder or rectangle.x == rightScreenBorder\
-                    or rectangle.x == leftScreenBorder:
                 rectangle.change_color(color_list)
 
-        redraw(rectangles)
+        redraw(rectangles, window)
 
 
 if __name__ == '__main__':
