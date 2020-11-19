@@ -40,10 +40,13 @@ class Rectangle:
         else:
             self.color = color_list[random_number]
 
+    def move(self):
+        self.x += self.x_velocity
+        self.y += self.y_velocity
+
 
 def redraw(rectangles):
     window.fill((0, 0, 0))
-    # startRect.draw(window)
     for rectangle in rectangles:
         rectangle.draw(window)
     pygame.display.update()
@@ -103,8 +106,7 @@ def main():
 
         # move the rectangles
         for rectangle in rectangles:
-            rectangle.x += rectangle.x_velocity
-            rectangle.y += rectangle.y_velocity
+            rectangle.move()
 
         # check for border collision and change color and direction
         for rectangle in rectangles:
