@@ -20,6 +20,11 @@ class Rectangle:
                              self.bottom_right_corner['x'],
                              self.bottom_left_corner['x']]
 
+        self.all_y_corner = [self.top_left_corner['y'],
+                             self.top_right_corner['y'],
+                             self.bottom_right_corner['y'],
+                             self.bottom_left_corner['y']]
+
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
 
@@ -51,17 +56,25 @@ class Rectangle:
                              self.bottom_right_corner['x'],
                              self.bottom_left_corner['x']]
 
-    def other_rect_hit(self, other_rectangle, color_list):
-        for corner in range(0, len(self.all_x_corner)):
-            for corner2 in range(0, len(other_rectangle.all_x_corner)):
-                if self.all_x_corner[corner] == other_rectangle.all_x_corner[corner2]:
-                    return True
-                else:
-                    return False
+        self.all_y_corner = [self.top_left_corner['y'],
+                             self.top_right_corner['y'],
+                             self.bottom_right_corner['y'],
+                             self.bottom_left_corner['y']]
 
-        # if other_rectangle.top_left_corner['x'] == self.top_right_corner['x']:
-        #    other_rectangle.change_color(color_list)
-        #    print(self.top_right_corner['x'])
+    def other_rect_hit(self, other_rectangle, color_list):
+        for corner in range(0, len(other_rectangle.all_x_corner)):
+            if self.top_left_corner['x'] <= other_rectangle.all_x_corner[corner] <= self.top_right_corner['x']\
+                    and self.bottom_left_corner['y'] >= other_rectangle.all_y_corner[corner] >= self.top_left_corner['y']:
+                return True
+            else:
+                return False
+        # for corner in range(0, len(self.all_x_corner)):
+        #    for corner2 in range(0, len(other_rectangle.all_x_corner)):
+        #        if self.all_x_corner[corner] == other_rectangle.all_x_corner[corner2] and \
+        #                self.all_y_corner[corner] == other_rectangle.all_y_corner[corner2]:
+        #            return True
+        #        else:
+        #            return False
 
 
 def redraw(rectangles, test_Rect_1, test_Rect_2, window):
@@ -124,8 +137,8 @@ def main():
     topScreenBorder = 0
     bottomScreenBorder = screenHeight - rectHeight
 
-    test_Rect_1 = Rectangle(10, 10, rectWidth, rectHeight, red, 1, 0)
-    test_Rect_2 = Rectangle(1250, 10, rectWidth, rectHeight, red, -1, 0)
+    test_Rect_1 = Rectangle(40, 40, rectWidth, rectHeight, red, -1, -1)
+    test_Rect_2 = Rectangle(10, 10, rectWidth, rectHeight, red, 1, 1)
 
     run = True
     while run:
@@ -158,7 +171,6 @@ def main():
         if test_Rect_1.other_rect_hit(test_Rect_2, color_list):
             test_Rect_1.change_color(color_list)
             test_Rect_2.change_color(color_list)
-
 
         redraw(rectangles, test_Rect_1, test_Rect_2, window)
 
