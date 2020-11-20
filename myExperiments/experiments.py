@@ -14,7 +14,11 @@ class Rectangle:
         self.top_left_corner = {'x': self.x, 'y': self.y}
         self.top_right_corner = {'x': self.x + self.width, 'y': self.y}
         self.bottom_right_corner = {'x': self.x + self.width + self.height, 'y': self.y + self.height}
-        self.bottom_right_corner = {'x': self.x, 'y': self.height}
+        self.bottom_left_corner = {'x': self.x, 'y': self.height}
+        self.all_x_corner = [self.top_left_corner['x'],
+                             self.top_right_corner['x'],
+                             self.bottom_right_corner['x'],
+                             self.bottom_left_corner['x']]
 
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
@@ -41,11 +45,23 @@ class Rectangle:
         self.top_left_corner = {'x': self.x, 'y': self.y}
         self.top_right_corner = {'x': self.x + self.width, 'y': self.y}
         self.bottom_right_corner = {'x': self.x + self.width + self.height, 'y': self.y + self.height}
-        self.bottom_right_corner = {'x': self.x, 'y': self.height}
+        self.bottom_left_corner = {'x': self.x, 'y': self.height}
+        self.all_x_corner = [self.top_left_corner['x'],
+                             self.top_right_corner['x'],
+                             self.bottom_right_corner['x'],
+                             self.bottom_left_corner['x']]
 
-    def other_rect_hit(self, other_rectangle):
-        if other_rectangle.top_left_corner['x'] == self.top_right_corner['x']:
-            print('Hit')
+    def other_rect_hit(self, other_rectangle, color_list):
+        for corner in range(0, len(self.all_x_corner)):
+            for corner2 in range(0, len(other_rectangle.all_x_corner)):
+                if self.all_x_corner[corner] == other_rectangle.all_x_corner[corner2]:
+                    return True
+                else:
+                    return False
+
+        # if other_rectangle.top_left_corner['x'] == self.top_right_corner['x']:
+        #    other_rectangle.change_color(color_list)
+        #    print(self.top_right_corner['x'])
 
 
 def redraw(rectangles, test_Rect_1, test_Rect_2, window):
@@ -113,7 +129,7 @@ def main():
 
     run = True
     while run:
-        clock.tick(60)  # fps = 27
+        clock.tick(240)  # fps = 27
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -139,7 +155,10 @@ def main():
         test_Rect_1.move()
         test_Rect_2.move()
 
-        test_Rect_1.other_rect_hit(test_Rect_2)
+        if test_Rect_1.other_rect_hit(test_Rect_2, color_list):
+            test_Rect_1.change_color(color_list)
+            test_Rect_2.change_color(color_list)
+
 
         redraw(rectangles, test_Rect_1, test_Rect_2, window)
 
