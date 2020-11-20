@@ -11,6 +11,10 @@ class Rectangle:
         self.color = color
         self.x_velocity = x_velocity
         self.y_velocity = y_velocity
+        self.top_left_corner = {'x': self.x, 'y': self.y}
+        self.top_right_corner = {'x': self.x + self.width, 'y': self.y}
+        self.bottom_right_corner = {'x': self.x + self.width + self.height, 'y': self.y + self.height}
+        self.bottom_right_corner = {'x': self.x, 'y': self.height}
 
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
@@ -32,6 +36,16 @@ class Rectangle:
     def move(self):
         self.x += self.x_velocity
         self.y += self.y_velocity
+
+        # change the corner - coordinates
+        self.top_left_corner = {'x': self.x, 'y': self.y}
+        self.top_right_corner = {'x': self.x + self.width, 'y': self.y}
+        self.bottom_right_corner = {'x': self.x + self.width + self.height, 'y': self.y + self.height}
+        self.bottom_right_corner = {'x': self.x, 'y': self.height}
+
+    def other_rect_hit(self, other_rectangle):
+        if other_rectangle.top_left_corner['x'] == self.top_right_corner['x']:
+            print('Hit')
 
 
 def redraw(rectangles, test_Rect_1, test_Rect_2, window):
@@ -99,7 +113,7 @@ def main():
 
     run = True
     while run:
-        clock.tick(500)  # fps = 27
+        clock.tick(60)  # fps = 27
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -124,6 +138,8 @@ def main():
 
         test_Rect_1.move()
         test_Rect_2.move()
+
+        test_Rect_1.other_rect_hit(test_Rect_2)
 
         redraw(rectangles, test_Rect_1, test_Rect_2, window)
 
