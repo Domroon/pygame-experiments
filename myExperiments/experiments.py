@@ -61,10 +61,10 @@ class Rectangle:
                              self.bottom_right_corner['y'],
                              self.bottom_left_corner['y']]
 
-    def other_rect_hit(self, other_rectangle, color_list):
+    def other_rect_hit(self, other_rectangle):
         for corner in range(0, len(other_rectangle.all_x_corner)):
-            if self.top_left_corner['x'] <= other_rectangle.all_x_corner[corner] <= self.top_right_corner['x']\
-                    and self.bottom_left_corner['y'] >= other_rectangle.all_y_corner[corner] >= self.top_left_corner['y']:
+            if other_rectangle.all_x_corner[corner] >= self.top_left_corner['x'] and other_rectangle.all_y_corner[corner] >= self.top_left_corner['y']\
+                    and other_rectangle.all_y_corner[corner] <= self.bottom_right_corner['y']  and other_rectangle.all_x_corner[corner] <= self.bottom_right_corner['x']:
                 return True
             else:
                 return False
@@ -137,12 +137,12 @@ def main():
     topScreenBorder = 0
     bottomScreenBorder = screenHeight - rectHeight
 
-    test_Rect_1 = Rectangle(40, 40, rectWidth, rectHeight, red, -1, -1)
-    test_Rect_2 = Rectangle(10, 10, rectWidth, rectHeight, red, 1, 1)
+    test_Rect_1 = Rectangle(10, 10, rectWidth, rectHeight, red, 1, 0)
+    test_Rect_2 = Rectangle(1250, 16, rectWidth, rectHeight, red, -1, 0)
 
     run = True
     while run:
-        clock.tick(240)  # fps = 27
+        clock.tick(250)  # fps = 27
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -165,10 +165,14 @@ def main():
                 rectangle.x_velocity *= -1
                 rectangle.change_color(color_list)
 
+            for i in range(0, len(rectangles)):
+                if rectangle.other_rect_hit(rectangles[i]) and rectangles[i] != rectangle:
+                    rectangle.change_color(color_list)
+
         test_Rect_1.move()
         test_Rect_2.move()
 
-        if test_Rect_1.other_rect_hit(test_Rect_2, color_list):
+        if test_Rect_1.other_rect_hit(test_Rect_2):
             test_Rect_1.change_color(color_list)
             test_Rect_2.change_color(color_list)
 
