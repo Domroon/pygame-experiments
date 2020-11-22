@@ -152,6 +152,8 @@ def main():
         if keys[pygame.K_SPACE]:
             generate_rectangle(leftScreenBorder, rightScreenBorder, topScreenBorder, bottomScreenBorder, rectangles,
                                 color_list, rectWidth, rectHeight)
+        if keys[pygame.K_DOWN]:
+            rectangles.clear()
 
         for rectangle in rectangles:
 
